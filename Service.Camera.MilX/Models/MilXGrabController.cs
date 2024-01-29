@@ -16,7 +16,7 @@ namespace Service.Camera.MilX.Models
         private MIL_DIG_HOOK_FUNCTION_PTR _captureCallbackDelegate;
         private bool _isGrabbing = false;
         private int _imgWidth;
-        private int _imgHeight;
+        private int _imgHeight; 
 
         public event EventHandler<GrabImageEventArgs> ImageCaptured;
 
