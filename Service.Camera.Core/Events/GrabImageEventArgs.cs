@@ -5,11 +5,11 @@ namespace Service.Camera.Core.Events
 {
     public class GrabImageEventArgs : EventArgs
     {
-        public BitmapDataWrapper BmpWrapper { get; }
+        public byte[] RawData { get; }
 
-        public GrabImageEventArgs(BitmapDataWrapper bmpWrapper)
+        public GrabImageEventArgs(byte[] rawData    )
         {
-            BmpWrapper = bmpWrapper;
+            RawData = rawData;
         }
     }
 }

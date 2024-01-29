@@ -40,7 +40,6 @@ namespace Service.Camera.MilX.Models
             MIL.MdigAlloc(_milSystem, MIL.M_DEFAULT, "M_DEFAULT", MIL.M_DEFAULT, ref _milDigitizer);  // 디지타이저를 할당합니다.
             if (_milDigitizer == MIL.M_NULL) throw new Exception("DigitizerID Allocate Fatal");
         }
-
         public void Dispose()
         {
             MIL.MappFreeDefault(_milApplication, _milSystem, MIL.M_NULL, _milDigitizer, MIL.M_NULL);

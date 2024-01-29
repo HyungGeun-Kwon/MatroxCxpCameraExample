@@ -16,8 +16,9 @@ namespace Service.Camera.MilX.Models
         private MIL_DIG_HOOK_FUNCTION_PTR _captureCallbackDelegate;
         private bool _isGrabbing = false;
         private int _imgWidth;
-        private int _imgHeight; 
+        private int _imgHeight;
 
+        public int CallbackCount { get; private set; } = 0;
         public event EventHandler<GrabImageEventArgs> ImageCaptured;
 
         public MilXGrabController(MIL_ID milSystem, MIL_ID milDigitizer)
@@ -32,6 +33,7 @@ namespace Service.Camera.MilX.Models
         {
             if (_isGrabbing) return;
 
+            CallbackCount = 0;
             MIL.MappControl(MIL.M_DEFAULT, MIL.M_ERROR, MIL.M_PRINT_DISABLE);
             UpdateSize();
             AllocBuffer();
@@ -75,8 +77,8 @@ namespace Service.Camera.MilX.Models
             MIL.MdigGetHookInfo(hookID, MIL.M_MODIFIED_BUFFER + MIL.M_BUFFER_ID, ref _milGrabImage[0]);
             byte[] byteArr = new byte[_imgWidth * _imgHeight];
             MIL.MbufGet2d(_milGrabImage[0], 0, 0, _imgWidth, _imgHeight, byteArr);
-            BitmapDataWrapper bmpDataWrapper = new BitmapDataWrapper(byteArr, _imgWidth, _imgHeight, _imgWidth, PixelFormat.Format8bppIndexed);
-            ImageCaptured?.Invoke(this, new GrabImageEventArgs(bmpDataWrapper));
+            ImageCaptured?.Invoke(this, new GrabImageEventArgs(byteArr));
+
             return 0;
         }
 

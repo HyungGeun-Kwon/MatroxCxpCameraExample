@@ -22,7 +22,7 @@ namespace MatroxCxpCameraExample.ViewModels
         private MatroxCxpCamera _cam;
         public BitmapImage MainImage { get => _mainImage; set => SetProperty(ref _mainImage, value); }
         public double ExpTime { get => _expTime; set => SetProperty(ref _expTime, value); }
-        public double Gain { get => _gain; set => SetProperty(ref _gain, value); }
+        public double GainRaw { get => _gain; set => SetProperty(ref _gain, value); }
 
         public ICommand BtnGrabStartClickCommand => new BindingCommand(OnBtnGrabStartClick);
         public ICommand BtnGrabStopClickCommand => new BindingCommand(OnBtnGrabStopClick);
@@ -43,7 +43,7 @@ namespace MatroxCxpCameraExample.ViewModels
         {
             _cam.MilXFeatureController.SetStrFeature("PixelFormat", "Mono8");
             ExpTime = _cam.MilXFeatureController.GetDoubleFeature("ExposureTime");
-            Gain = _cam.MilXFeatureController.GetDoubleFeature("Gain");
+            GainRaw = _cam.MilXFeatureController.GetDoubleFeature("Gain");
             _minExpTime = _cam.MilXFeatureController.GetDoubleFeature("AutoExposureTimeLowerLimit");
             _maxExpTime = _cam.MilXFeatureController.GetDoubleFeature("AutoExposureTimeUpperLimit");
             _minGain = 0;
@@ -76,14 +76,14 @@ namespace MatroxCxpCameraExample.ViewModels
         }
         private void ChangeGain()
         {
-            double setValue = new double[2] { Gain, _minGain }.Max();
+            double setValue = new double[2] { GainRaw, _minGain }.Max();
             setValue = new double[2] { setValue, _maxGain }.Min();
-            Gain = _cam.MilXFeatureController.SetDoubleFeature("Gain", setValue);
+            GainRaw = _cam.MilXFeatureController.SetDoubleFeature("Gain", setValue);
         }
         private void OnImageProcessed(object sender, GrabImageEventArgs e)
         {
-            MainImage = ImageUtil.BitmapToBitmapImage(e.BmpWrapper.Bmp);
-            e.BmpWrapper.Dispose();
+            MainImage = ImageUtil.BitmapToBitmapImage(e.RawData.Bmp);
+            e.RawData.Dispose();
         }
 
         private void OnClosing()

@@ -2,7 +2,7 @@
 using Service.Camera.MilX.Interfaces;
 using System.Text;
 
-namespace Service.Camera.MilX.Models
+    namespace Service.Camera.MilX.Models
 {
     public class MilXFeatureController : IMilXFeatureController
     {
