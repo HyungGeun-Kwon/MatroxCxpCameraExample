@@ -1,9 +1,7 @@
 ﻿using Matrox.MatroxImagingLibrary;
 using Service.Camera.Core.Events;
 using Service.Camera.Core.Interfaces;
-using Service.Camera.Core.Models;
 using System;
-using System.Drawing.Imaging;
 
 namespace Service.Camera.MilX.Models
 {
@@ -57,6 +55,7 @@ namespace Service.Camera.MilX.Models
             _imgWidth = (int)MIL.MdigInquire(_milDigitizer, MIL.M_SIZE_X, MIL.M_NULL);
             _imgHeight = (int)MIL.MdigInquire(_milDigitizer, MIL.M_SIZE_Y, MIL.M_NULL);
         }
+
         private void SetCallback()
         {
             _captureCallbackDelegate = new MIL_DIG_HOOK_FUNCTION_PTR(CaptureCallback);
@@ -67,11 +66,11 @@ namespace Service.Camera.MilX.Models
             MIL.MbufAlloc2d(_milSystem, _imgWidth, _imgHeight, 8 + MIL.M_UNSIGNED, MIL.M_IMAGE + MIL.M_GRAB + MIL.M_PROC, ref _milGrabImage[0]);
             MIL.MbufClear(_milGrabImage[0], 0xFF);
         }
-
         private void FreeBuffers()
         {
             MIL.MbufFree(_milGrabImage[0]);
         }
+
         private MIL_INT CaptureCallback(MIL_INT hookType, MIL_ID hookID, IntPtr UserDataPtr)
         {
             MIL.MdigGetHookInfo(hookID, MIL.M_MODIFIED_BUFFER + MIL.M_BUFFER_ID, ref _milGrabImage[0]);

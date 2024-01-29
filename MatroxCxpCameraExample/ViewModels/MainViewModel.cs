@@ -1,7 +1,9 @@
 ﻿using MatroxCxpCameraExample.Modules.Mvvm;
 using Service.Camera.Core.Events;
+using Service.Camera.Core.Models;
 using Service.Camera.Core.Utils;
 using Service.Camera.MilX.Models;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
@@ -14,6 +16,8 @@ namespace MatroxCxpCameraExample.ViewModels
         private double _expTime;
         private double _gain;
 
+        private int _width;
+        private int _height;
         private double _maxExpTime;
         private double _minExpTime;
         private double _maxGain;
@@ -42,6 +46,8 @@ namespace MatroxCxpCameraExample.ViewModels
         private void SetCameraDefaultValues()
         {
             _cam.MilXFeatureController.SetStrFeature("PixelFormat", "Mono8");
+            _width = (int)_cam.MilXFeatureController.GetDoubleFeature("Width");
+            _height = (int)_cam.MilXFeatureController.GetDoubleFeature("Height");
             ExpTime = _cam.MilXFeatureController.GetDoubleFeature("ExposureTime");
             GainRaw = _cam.MilXFeatureController.GetDoubleFeature("Gain");
             _minExpTime = _cam.MilXFeatureController.GetDoubleFeature("AutoExposureTimeLowerLimit");
@@ -60,6 +66,7 @@ namespace MatroxCxpCameraExample.ViewModels
         }
         private void OnExpTimeLostFocus() => ChangeExpTime();
         private void OnGainLostFocus() => ChangeGain();
+
         private void OnExpTimeKeyDown(KeyEventArgs e)
         {
             if (e.Key == Key.Enter) { ChangeExpTime(); }
@@ -68,6 +75,7 @@ namespace MatroxCxpCameraExample.ViewModels
         {
             if (e.Key == Key.Enter) { ChangeGain(); }
         }
+
         private void ChangeExpTime()
         {
             double setValue = new double[2] { ExpTime, _minExpTime }.Max();
@@ -80,10 +88,13 @@ namespace MatroxCxpCameraExample.ViewModels
             setValue = new double[2] { setValue, _maxGain }.Min();
             GainRaw = _cam.MilXFeatureController.SetDoubleFeature("Gain", setValue);
         }
+
         private void OnImageProcessed(object sender, GrabImageEventArgs e)
         {
-            MainImage = ImageUtil.BitmapToBitmapImage(e.RawData.Bmp);
-            e.RawData.Dispose();
+            BitmapDataWrapper bitmapDataWrapper = new BitmapDataWrapper(e.RawData, _width, _height, _width, PixelFormat.Format8bppIndexed);
+            bitmapDataWrapper.SetBitmapGrayscalePalette();
+            MainImage = ImageUtil.BitmapToBitmapImage(bitmapDataWrapper.Bmp);
+            bitmapDataWrapper.Dispose();
         }
 
         private void OnClosing()

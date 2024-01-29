@@ -26,11 +26,11 @@ namespace Service.Camera.Core.Models
             _ptrData = Marshal.AllocHGlobal(rawData.Length);
             Marshal.Copy(rawData, 0, _ptrData, rawData.Length);
             Bmp = new Bitmap(width, height, stride, pixelFormat, _ptrData);
+        }
 
-            if (pixelFormat == PixelFormat.Format8bppIndexed)
-            {
-                ImageUtil.SetGrayscalePalette(Bmp);
-            }
+        public void SetBitmapGrayscalePalette()
+        {
+            ImageUtil.SetGrayscalePalette(Bmp);
         }
 
         public BitmapDataWrapper DeepCopy()

@@ -3,7 +3,7 @@ using System;
 
 namespace Service.Camera.Core.Interfaces
 {
-    public interface IGrabber
+    public interface IGrabber : IDisposable
     {
         int CallbackCount { get; }
         event EventHandler<GrabImageEventArgs> ImageCaptured;

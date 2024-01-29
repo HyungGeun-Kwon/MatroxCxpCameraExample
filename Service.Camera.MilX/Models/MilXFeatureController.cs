@@ -16,6 +16,9 @@ using System.Text;
         {
             MIL.MdigControlFeature(_milDigitizer, MIL.M_FEATURE_VALUE, feature, MIL.M_TYPE_STRING, strValue);
         }
+        /// <summary>
+        /// Int값도 가능.
+        /// </summary>
         public double SetDoubleFeature(string feature, double doubleValue)
         {
             MIL.MdigControlFeature(_milDigitizer, MIL.M_FEATURE_VALUE, feature, MIL.M_TYPE_DOUBLE, ref doubleValue);
@@ -27,6 +30,9 @@ using System.Text;
             MIL.MdigInquireFeature(_milDigitizer, MIL.M_FEATURE_VALUE, feature, MIL.M_TYPE_STRING, reVal);
             return reVal.ToString();
         }
+        /// <summary>
+        /// Int값도 가능.
+        /// </summary>
         public double GetDoubleFeature(string feature)
         {
             double reVal = 0;
