@@ -2,7 +2,7 @@
 using Service.Camera.MilX.Interfaces;
 using System.Text;
 
-    namespace Service.Camera.MilX.Models
+namespace Service.Camera.MilX.Models
 {
     public class MilXFeatureController : IMilXFeatureController
     {
@@ -11,14 +11,14 @@ using System.Text;
         {
             _milDigitizer = milDigitizer;
         }
-
+        public void ExcuteFeature(string feature)
+        {
+            MIL.MdigControlFeature(_milDigitizer, MIL.M_FEATURE_EXECUTE, feature, MIL.M_TYPE_COMMAND, MIL.M_NULL);
+        }
         public void SetStrFeature(string feature, string strValue)
         {
             MIL.MdigControlFeature(_milDigitizer, MIL.M_FEATURE_VALUE, feature, MIL.M_TYPE_STRING, strValue);
         }
-        /// <summary>
-        /// Int값도 가능.
-        /// </summary>
         public double SetDoubleFeature(string feature, double doubleValue)
         {
             MIL.MdigControlFeature(_milDigitizer, MIL.M_FEATURE_VALUE, feature, MIL.M_TYPE_DOUBLE, ref doubleValue);
@@ -30,9 +30,6 @@ using System.Text;
             MIL.MdigInquireFeature(_milDigitizer, MIL.M_FEATURE_VALUE, feature, MIL.M_TYPE_STRING, reVal);
             return reVal.ToString();
         }
-        /// <summary>
-        /// Int값도 가능.
-        /// </summary>
         public double GetDoubleFeature(string feature)
         {
             double reVal = 0;

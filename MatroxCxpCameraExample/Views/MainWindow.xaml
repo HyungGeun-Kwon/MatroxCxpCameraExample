@@ -105,6 +105,11 @@
                     <Label Content="EventCount"/>
                     <TextBox Grid.Column="1" VerticalAlignment="Center" Text="{Binding CountTester.EventCount}"/>
                 </Grid>-->
+                <Button 
+                    Margin="10"
+                    Padding="0 10"
+                    Content="SW Trigger"
+                    Command="{Binding BtnSwTriggerClickCommand}"/>
             </StackPanel>
         </Border>
     </Grid>

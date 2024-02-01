@@ -3,6 +3,7 @@ using Service.Camera.Core.Events;
 using Service.Camera.Core.Models;
 using Service.Camera.Core.Utils;
 using Service.Camera.MilX.Models;
+using System;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Windows.Input;
@@ -12,7 +13,7 @@ namespace MatroxCxpCameraExample.ViewModels
 {
     public class MainViewModel : NotifyBase
     {
-        private BitmapImage _mainImage;
+        private BitmapSource _mainImage;
         private double _expTime;
         private double _gain;
 
@@ -24,7 +25,7 @@ namespace MatroxCxpCameraExample.ViewModels
         private double _minGain;
 
         private MatroxCxpCamera _cam;
-        public BitmapImage MainImage { get => _mainImage; set => SetProperty(ref _mainImage, value); }
+        public BitmapSource MainImage { get => _mainImage; set => SetProperty(ref _mainImage, value); }
         public double ExpTime { get => _expTime; set => SetProperty(ref _expTime, value); }
         public double GainRaw { get => _gain; set => SetProperty(ref _gain, value); }
 
@@ -34,6 +35,7 @@ namespace MatroxCxpCameraExample.ViewModels
         public ICommand ExpTimeKeyDownCommand => new BindingCommand<KeyEventArgs>(OnExpTimeKeyDown);
         public ICommand GainLostFocusCommand => new BindingCommand(OnGainLostFocus);
         public ICommand GainKeyDownCommand => new BindingCommand<KeyEventArgs>(OnGainKeyDown);
+        public ICommand BtnSwTriggerClickCommand => new BindingCommand(OnBtnSwTriggerClick);
         public ICommand ClosingCommand => new BindingCommand(OnClosing);
 
         public MainViewModel()
@@ -46,6 +48,8 @@ namespace MatroxCxpCameraExample.ViewModels
         private void SetCameraDefaultValues()
         {
             _cam.MilXFeatureController.SetStrFeature("PixelFormat", "Mono8");
+            _cam.MilXFeatureController.SetStrFeature("TriggerSource", "Software");
+            _cam.MilXFeatureController.SetStrFeature("TriggerMode", "On");
             _width = (int)_cam.MilXFeatureController.GetDoubleFeature("Width");
             _height = (int)_cam.MilXFeatureController.GetDoubleFeature("Height");
             ExpTime = _cam.MilXFeatureController.GetDoubleFeature("ExposureTime");
@@ -87,6 +91,10 @@ namespace MatroxCxpCameraExample.ViewModels
             double setValue = new double[2] { GainRaw, _minGain }.Max();
             setValue = new double[2] { setValue, _maxGain }.Min();
             GainRaw = _cam.MilXFeatureController.SetDoubleFeature("Gain", setValue);
+        }
+        private void OnBtnSwTriggerClick()
+        {
+            _cam.MilXFeatureController.ExcuteFeature("TriggerSoftware");
         }
 
         private void OnImageProcessed(object sender, GrabImageEventArgs e)
