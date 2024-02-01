@@ -36,6 +36,7 @@ namespace Service.Camera.MilX.Models
             UpdateSize();
             AllocBuffer();
             MIL.MappControl(MIL.M_DEFAULT, MIL.M_ERROR, MIL.M_PRINT_ENABLE);
+            MIL.MdigControl(_milDigitizer, MIL.M_GRAB_TIMEOUT, MIL.M_INFINITE);
             MIL.MdigProcess(_milDigitizer, _milGrabImage, 1, MIL.M_START, MIL.M_DEFAULT, _captureCallbackDelegate, IntPtr.Zero);
             _isGrabbing = true;
         }
